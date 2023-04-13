@@ -62,7 +62,7 @@ def download_file(request):
 
     # Create an HttpResponse with appropriate headers for file download
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="output.xlsx"'
+    response['Content-Disposition'] = 'attachment; filename="example.xlsx"'
     return response
 
 def scrape_liste_categrie(liste_url_categorie):
@@ -113,7 +113,7 @@ def scrape_liste_categrie(liste_url_categorie):
                     prix_actuel_produit = soup.find("span", class_="current-price-value")
                     ref_produit = soup.find("div", class_="product-reference")
                     image_produit = soup.find("img", class_="no-sirv-lazy-load")
-                    
+
                     all_image_produit = soup.find_all("a", class_="magictoolbox-selector")
                     description_produit = soup.find('div', class_="product-information")
                     full_description = soup.find('div', class_="product-description")
@@ -183,7 +183,6 @@ def scrape_liste_categrie(liste_url_categorie):
                         produit['prix'] = prix_actuel_produit.text.replace('\n', '').strip().replace('DH', "").replace("TTC", "").strip()
                     else:
                         produit['prix'] = None
-                    print(produit['prix'])
                     liste_all_product_details.append(produit)
 
                                 

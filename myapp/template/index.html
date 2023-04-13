@@ -10,7 +10,7 @@
     <div class="container mt-3" style="width: max-content;">
         <div class="card m-3 p-3">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary scrape_data" type="button">Scraper les donnees</button>
+                <button class="btn btn-primary scrape_data" type="button">Scraper les données</button>
             </div>
             <hr>
             <div class="d-flex align-items-start">
@@ -70,6 +70,8 @@ $(document).on('click', '.scrape_data', function(){
         });
     
     if(liste_url.length > 0){
+        button = $(this)
+        button.text('Téléchargement en cours ...')
         data_dict = {
             "action": "scraper-pages",
             "liste_to_scrape": liste_url,
@@ -83,7 +85,9 @@ $(document).on('click', '.scrape_data', function(){
                 url: "{% url 'ajax_calls' %}",
                 data: JSON.stringify(data_dict),
                 success: function(response) {
+                    button.text('Scraper les données')
                     download_file()
+
                 }
             });
     }else{
