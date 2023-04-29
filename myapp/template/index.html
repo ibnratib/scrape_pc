@@ -25,13 +25,14 @@
                             <input class="form-check-input select_all mb-2" type="checkbox">
                             <label class="form-check-label"><strong>Sélectionner toutes les sous-catégories</strong></label>
                             {% for sous_categorie in categorie.url_sous_categorie %}
-                            <div class="form-check" style="margin-left: 20px;">
-
-                                <input class="form-check-input url_produit" type="checkbox" value="{{sous_categorie.lien}}">
-                                <label class="form-check-label">
-                                  {{sous_categorie.nom}}
-                                </label>
-                            </div>
+                                {% if not forloop.first %} 
+                                    <div class="form-check" style="margin-left: 20px;">
+                                        <input class="form-check-input url_produit" type="checkbox" value="{{sous_categorie.lien}}">
+                                        <label class="form-check-label">
+                                        {{sous_categorie.nom}}
+                                        </label>
+                                    </div>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     {% endfor %}
@@ -86,7 +87,16 @@ $(document).on('click', '.scrape_data', function(){
                 data: JSON.stringify(data_dict),
                 success: function(response) {
                     button.text('Scraper les données')
-                    download_file()
+                    console.log(response)
+                    // window.location.href = data_dict.url;
+                    // Download the file from media directory
+                    var download_url = response.url;
+                    var a = document.createElement('a');
+                    a.href = download_url;
+                    a.download = download_url.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
 
                 }
             });
@@ -99,28 +109,6 @@ $(document).on('click', '.scrape_data', function(){
             })
     }
 })
-
-
-function download_file(){
-    $.ajax({
-        url: '/download/',  // URL to the download_file view
-        type: 'GET',
-        success: function(data) {
-            console.log("ssssssssssssssssssssssssssssss", data)
-            // Create a download link and trigger a click event to start the download
-            var blob = new Blob([data]);
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = 'example.xlsx';
-            link.click();
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            console.log('Error:', textStatus, errorThrown);
-        }
-    });
-}
-
-
 
 
     
