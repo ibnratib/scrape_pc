@@ -75,15 +75,12 @@ def ajax_calls(request):
         if action == "scraper-pages":
             liste_to_scrape = received_json_data['liste_to_scrape']
             data = scrape_liste_categrie_selinieum(liste_to_scrape)
-            output_file = 'output'
-            data.to_excel(output_file+".xlsx")
-            with zipfile.ZipFile(f'{output_file}.zip', mode='w', compression=zipfile.ZIP_DEFLATED) as z:
-                z.write(output_file+".xlsx")
-            # Save the output file to media directory
+            data.to_excel("media/output.xlsx")
+            with zipfile.ZipFile('media/output.zip', mode='w', compression=zipfile.ZIP_DEFLATED) as z:
+                z.write("media/output.xlsx")
             fs = FileSystemStorage()
-            with open(f'{output_file}.zip', 'rb') as f:
-                fs.save(f'{output_file}.zip', f)
-            data = {'url': fs.url(f'{output_file}.zip')}
+            data = {'url': fs.url('output.zip')}
+
             return JsonResponse(data)
             
         return JsonResponse(data={}, safe=False)
@@ -231,7 +228,6 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
     driver_diway = webdriver.Chrome()
     driver_diway.get(login_url)
 
-    time.sleep(2)
     # Remplir le formulaire de connexion
     email_field = driver_diway.find_element(By.NAME, "email")
     email_field.send_keys(email)
@@ -243,6 +239,32 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
     password_field.send_keys(Keys.RETURN)
     
     liste_all_product_details = []
+
+    # liste filter
+    filtres = ["Cartouches d'impression",
+                    "Vitesse d'impression noir",
+                    "Qualité d'impression couleur",
+                    "Qualité d'impression noire",
+                    "Écran",
+                    "Cycle d'utilisation",
+                    "Mémoire installée",
+                    "Poids net",
+                    "Dimensions (l x p x h)",
+                    "Capacité bac papier",
+                    "Impression sans bordure",
+                    "Connectivité",
+                    "Processeur",
+                    "Mémoire vive(RAM) installée",
+                    "Taille du disque dur",
+                    "Carte graphique",
+                    "Mémoire vidéo dédiée",
+                    "Poids en kg",
+                    "Poids en kgTaille de l'écran",
+                    "Clavier",
+                    "Carte réseau Ethernet",
+                    "Communication sans fil",
+                    "Mémoire vive(RAM) maxi",
+                    "Taille de l'écran (diagonale)"]
     if liste_url_categorie:
         
         for url_categorie in  liste_url_categorie:    
@@ -287,7 +309,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
 
                     # ouvrire iris pour un produit
                     driver.get(url_produit)
-                    time.sleep(4)
+                    time.sleep(3)
 
                     #############################################################################
                     #############################################################################
@@ -340,6 +362,29 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
                         link = driver.find_element(By.LINK_TEXT, "FICHE TECHNIQUE")
                         link.click()
                         fiche_technique = driver.find_element(By.CLASS_NAME, "product-features").get_attribute('innerHTML')
+
+                        # recuperer les filtre
+                        # créer un objet BeautifulSoup à partir du code HTML
+                        soup = BeautifulSoup(fiche_technique, 'html.parser')
+
+                        # trouver tous les éléments <dt> dans la page
+                        elements_dt = soup.find_all('dt')
+
+                        # trouver tous les éléments <dd> dans la page
+                        elements_dd = soup.find_all('dd')
+
+                        # initialiser un dictionnaire pour stocker les clés et les valeurs
+                        data = {}
+
+                        # parcourir les éléments <dt> et <dd> et ajouter les clés et les valeurs au dictionnaire
+                        for i in range(len(elements_dt)):
+                            key = elements_dt[i].text.strip()
+                            value = elements_dd[i].text.strip()
+                            data[key] = " ".join(value.split())
+
+                        for filtre in filtres:
+                            if data.get(filtre, None):
+                                produit[filtre] = data.get(filtre, None)
                     except:
                         fiche_technique = None
                     
@@ -469,8 +514,3 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
                     
     df = pd.DataFrame(liste_all_product_details)
     return df
-
-
-
-
-

@@ -25,7 +25,7 @@
                             <input class="form-check-input select_all mb-2" type="checkbox">
                             <label class="form-check-label"><strong>Sélectionner toutes les sous-catégories</strong></label>
                             {% for sous_categorie in categorie.url_sous_categorie %}
-                                {% if not forloop.first %} 
+                                {% if not forloop.first or categorie.url_sous_categorie|length == 1 %} 
                                     <div class="form-check" style="margin-left: 20px;">
                                         <input class="form-check-input url_produit" type="checkbox" value="{{sous_categorie.lien}}">
                                         <label class="form-check-label">
@@ -98,6 +98,15 @@ $(document).on('click', '.scrape_data', function(){
                     a.click();
                     document.body.removeChild(a);
 
+                },
+                error: function(response) {
+                    button.text('Scraper les données')
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'Une erreur est survenue',
+                        showConfirmButton: true,
+                        })
                 }
             });
     }else{
