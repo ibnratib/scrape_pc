@@ -71,6 +71,7 @@ def ajax_calls(request):
         if action == "scraper-pages":
             liste_to_scrape = received_json_data['liste_to_scrape']
             data = scrape_liste_categrie_selinieum(liste_to_scrape)
+            # data = scrape_liste_categrie_bs4(liste_to_scrape)
             excel_file = data.to_excel("output.xlsx")
             return JsonResponse(data={}, safe=False)
             
