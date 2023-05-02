@@ -36,7 +36,6 @@ except Exception:
     env_database_host = config('POSTGRES_HOST')
     env_database_port = config('POSTGRES_PORT')
 
-print(env_key_value, env_database_name, env_database_user, env_database_password, env_database_host, env_database_port)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 SECRET_KEY = env_key_value

@@ -36,8 +36,17 @@ def home(request):
 
     base_url = f"https://www.iris.ma"
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "DNT": "1",
+        "Connection": "close",
+        "Upgrade-Insecure-Requests": "1",
+    }
+
     # recuperer les liens de tous les categories
-    response = requests.get(base_url)
+    response = requests.get(base_url, headers=headers)
     html_content = response.content
     soup = BeautifulSoup(html_content, "html.parser")
     menu_categories = soup.find("li", class_="menu_pr_category")
