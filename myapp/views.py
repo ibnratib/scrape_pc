@@ -74,7 +74,9 @@ def home(request):
 import zipfile
 from datetime import datetime
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def ajax_calls(request):
 
     if request.method == 'POST':

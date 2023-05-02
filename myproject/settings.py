@@ -42,7 +42,6 @@ SECRET_KEY = env_key_value
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_COOKIE_HTTPONLY = True
 
 # Application definition
 
