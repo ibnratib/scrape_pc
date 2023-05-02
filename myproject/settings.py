@@ -11,19 +11,34 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+from decouple import Config, RepositoryEnv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-import os
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0$l1&rs8whua^s3)tjl3t)yb1bu=viv*kw@=4v#$m_99jbdpuy'
+try:
+    DOTENV_FILE = os.path.join(BASE_DIR, '.envdev')
+    env_config = Config(RepositoryEnv(DOTENV_FILE))
+    env_key_value = env_config.get('SECRET_KEY')
+    env_database_name = env_config.get('POSTGRES_DB')
+    env_database_user = env_config.get('POSTGRES_USER')
+    env_database_password = env_config.get('POSTGRES_PASSWORD')
+    env_database_host = env_config.get('POSTGRES_HOST')
+    env_database_port = env_config.get('POSTGRES_PORT')
+except Exception:
+    env_key_value = config('SECRET_KEY')
+    env_database_name = config('POSTGRES_DB')
+    env_database_user = config('POSTGRES_USER')
+    env_database_password = config('POSTGRES_PASSWORD')
+    env_database_host = config('POSTGRES_HOST')
+    env_database_port = config('POSTGRES_PORT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+SECRET_KEY = env_key_value
 
 ALLOWED_HOSTS = ["*"]
 
@@ -76,11 +91,16 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env_database_name,
+        'USER': env_database_user,
+        'PORT': env_database_port,
+        'PASSWORD': env_database_password,
+        'HOST': env_database_host,
+        'POST': '',
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
