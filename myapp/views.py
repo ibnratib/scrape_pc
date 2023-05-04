@@ -221,8 +221,6 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
 
     
     driver = webdriver.Chrome(driver_path, chrome_options=chromeOptions)
-    driver.implicitly_wait(30)
-    driver.maximize_window()
     print("222222")
     # URL de la page de connexion
     login_url = "https://www.disway.com/profile/login"
