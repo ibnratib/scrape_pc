@@ -283,9 +283,17 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
             nom_categorie = ""
             while next_page:
                 url_page = url_categorie+f"?page={i}"
-                
-                response = requests.get(url_page, allow_redirects=True)
+                headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0",
+                        "Accept-Encoding": "gzip, deflate",
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                        "DNT": "1",
+                        "Connection": "close",
+                        "Upgrade-Insecure-Requests": "1",
+                }
+                response = requests.get(url_page, allow_redirects=True, headers=headers, verify=False)
                 i +=1
+
                 print(url_page, "**", response.url, "**", url_categorie, "**", i)
                 if (response.url != url_page and response.url != url_categorie) or (response.url != url_page and i >2):
                     next_page = False
@@ -299,6 +307,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
                     for titre_produit in list_titre_produit:
                         liste_url_produit.append(titre_produit.find("a")['href'])
                 liste_url_produit = list(set(liste_url_produit))
+                print(liste_url_produit)
                 # recupere le nom de la categorie
                 if not nom_categorie:
                     nom_categorie_tag = soup.find("h1", class_="h1")
