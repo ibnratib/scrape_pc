@@ -213,9 +213,16 @@ def scrape_liste_categrie_bs4(liste_url_categorie):
 def scrape_liste_categrie_selinieum(liste_url_categorie):
 
     print("1111111")
+    chromeOptions = webdriver.ChromeOptions()
     driver_path = '/usr/bin/chromedriver'
+    chromeOptions.add_argument('--headless')
+    chromeOptions.add_argument('--disable-gpu')
+    chromeOptions.add_argument('--no-sandbox')
 
-    driver = webdriver.Chrome(driver_path)
+    
+    driver = webdriver.Chrome(driver_path, chrome_options=chromeOptions)
+    driver.implicitly_wait(30)
+    driver.maximize_window()
     print("222222")
     # URL de la page de connexion
     login_url = "https://www.disway.com/profile/login"
@@ -226,7 +233,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
     password = "Tanger@/2023"
 
     # Lancer le navigateur
-    driver_diway = webdriver.Chrome(driver_path)
+    driver_diway = webdriver.Chrome(driver_path, chrome_options=chromeOptions)
     driver_diway.get(login_url)
 
     # Remplir le formulaire de connexion
@@ -319,9 +326,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
 
                     # ouvrire iris pour un produit
                     driver.get(url_produit)
-                    time.sleep(15)
-                    
-                    
+                    time.sleep(3)
 
                     #############################################################################
                     #############################################################################
