@@ -212,18 +212,18 @@ def scrape_liste_categrie_bs4(liste_url_categorie):
 
 def scrape_liste_categrie_selinieum(liste_url_categorie):
 
-
+    print("1111111")
     chromeOptions = webdriver.ChromeOptions()
     driver_path = '/usr/bin/chromedriver'
     chromeOptions.add_argument('--headless')
     chromeOptions.add_argument('--disable-gpu')
     chromeOptions.add_argument('--no-sandbox')
 
-
+    
     driver = webdriver.Chrome(driver_path, chrome_options=chromeOptions)
     driver.implicitly_wait(30)
     driver.maximize_window()
- 
+    print("222222")
     # URL de la page de connexion
     login_url = "https://www.disway.com/profile/login"
 
@@ -283,6 +283,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
             nom_categorie = ""
             while next_page:
                 url_page = url_categorie+f"?page={i}"
+                print(url_page)
                 response = requests.get(url_page)
                 i +=1
                 if (response.url != url_page and response.url != url_categorie) or (response.url != url_page and i >2):
@@ -325,6 +326,7 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
                     # recuperer le reference produit et lancer la recherche du produit dans disway
 
                     ref_produit = driver.find_element(By.CLASS_NAME, "product-reference")
+                    print(ref_produit.find_element(By.TAG_NAME,'span').text)
                     try:
                         driver_diway.get(f"https://www.disway.com/{ref_produit.find_element(By.TAG_NAME,'span').text}")
                         driver_diway.refresh()
