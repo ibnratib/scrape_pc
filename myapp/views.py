@@ -327,6 +327,8 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
                     # ouvrire iris pour un produit
                     driver.get(url_produit)
                     time.sleep(15)
+                    
+                    
 
                     #############################################################################
                     #############################################################################
