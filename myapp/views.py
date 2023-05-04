@@ -283,9 +283,10 @@ def scrape_liste_categrie_selinieum(liste_url_categorie):
             nom_categorie = ""
             while next_page:
                 url_page = url_categorie+f"?page={i}"
-                print(url_page)
+                
                 response = requests.get(url_page)
                 i +=1
+                print(url_page, "**", response.url, "**", url_categorie, "**", i)
                 if (response.url != url_page and response.url != url_categorie) or (response.url != url_page and i >2):
                     next_page = False
                 
